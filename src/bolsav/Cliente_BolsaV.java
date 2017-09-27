@@ -27,9 +27,14 @@ public class Cliente_BolsaV {
         try {
             // TODO code application logic here
             CliImpl cliente = new CliImpl(1);
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new Client_BolsaV(cliente).setVisible(true);
+                }
+            });
         } catch (RemoteException ex) {
             Logger.getLogger(Cliente_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }

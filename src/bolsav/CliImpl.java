@@ -19,9 +19,9 @@ import java.util.logging.Logger;
  */
 public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
 
-    private List<Stock> stocks;
-    private InterfaceServ server;
-    private int id;
+    public List<Stock> stocks;
+    public InterfaceServ server;
+    public int id;
     
     /**
      * @param eee
