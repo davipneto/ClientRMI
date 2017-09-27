@@ -26,14 +26,8 @@ public class Cliente_BolsaV {
         InterfaceServ servidor = null;
         try {
             // TODO code application logic here
-            
-            Registry refSN = LocateRegistry.getRegistry("localhost", 1099);
-            CliImpl cliente = new CliImpl();
-            servidor = (InterfaceServ) refSN.lookup("RefServidor");
-            servidor.chamar("Cliente", cliente);
+            CliImpl cliente = new CliImpl(1);
         } catch (RemoteException ex) {
-            Logger.getLogger(Cliente_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
             Logger.getLogger(Cliente_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

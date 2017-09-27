@@ -9,6 +9,7 @@ import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,7 +19,10 @@ import java.util.logging.Logger;
  */
 public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
 
-    //private Registry serv;
+    private List<Stock> stocks;
+    private InterfaceServ server;
+    private int id;
+    
     /**
      * @param eee
      * @throws RemoteException
@@ -28,12 +32,35 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
         System.out.println("Echo recebido: "+eee);
     }
     
-    public CliImpl() throws RemoteException{
-        //serv = servidor;
-        //servidor = (InterfaceServ) refSN.lookup("localhost/InterfaceServ");
-          //  servidor.chamar("Cliente", cliente);
+    public CliImpl(int id) throws RemoteException{
+        stocks = new ArrayList();
+        try {
+            this.id = id;
+            Registry refSN = LocateRegistry.getRegistry("localhost", 1099);
+            server = (InterfaceServ) refSN.lookup("RefServidor");
+            server.chamar("Cliente", this);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AccessException ex) {
+            Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    
+    public void insertStock(Stock stock) {
+        try {
+            stocks.add(stock);
+            server.newStock(this, stock);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public List<Stock> getStocks() {
+        return stocks;
+    }
+
+    public int getId() {
+        return id;
+    }
     
 }
