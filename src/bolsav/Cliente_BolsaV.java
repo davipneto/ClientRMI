@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * @author davi
  * @author geova
  */
 public class Cliente_BolsaV {

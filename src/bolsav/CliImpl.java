@@ -13,14 +13,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * @author davi
  * @author geova
  */
 public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
 
     //private Registry serv;
     /**
-     *
      * @param eee
      * @throws RemoteException
      */
@@ -34,5 +33,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
         //servidor = (InterfaceServ) refSN.lookup("localhost/InterfaceServ");
           //  servidor.chamar("Cliente", cliente);
     }
+    
+    
     
 }

@@ -8,7 +8,7 @@ package bolsav;
 import java.rmi.*;
 
 /**
- *
+ * @author davi
  * @author geova
  */
 public interface InterfaceServ extends Remote{
