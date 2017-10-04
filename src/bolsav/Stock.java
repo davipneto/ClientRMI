@@ -6,6 +6,8 @@
 package bolsav;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  *
@@ -56,6 +58,9 @@ public class Stock implements Serializable{
         this.available = available;
     }
     
-    
+    public String getPrice() {
+        NumberFormat formatter = new DecimalFormat("#0.00");
+        return formatter.format(minPrice).replace(',', '.');
+    }
     
 }

@@ -26,7 +26,8 @@ public class Cliente_BolsaV {
         InterfaceServ servidor = null;
         try {
             // TODO code application logic here
-            CliImpl cliente = new CliImpl(1);
+            
+            CliImpl cliente = new CliImpl(2);
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     new Client_BolsaV(cliente).setVisible(true);

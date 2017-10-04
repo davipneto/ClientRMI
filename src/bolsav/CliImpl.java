@@ -49,7 +49,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
     public void insertStock(Stock stock) {
         try {
             stocks.add(stock);
-            server.newStock(this, stock);
+            server.newStock(this, stock, id);
         } catch (RemoteException ex) {
             Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
