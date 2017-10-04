@@ -12,6 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * @author davi
@@ -30,6 +31,11 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
     @Override
     public void echo(String eee) throws RemoteException{
         System.out.println("Echo recebido: "+eee);
+    }
+    
+    @Override
+    public void notify(String event) throws RemoteException {
+        JOptionPane.showMessageDialog(null, event);
     }
     
     public CliImpl(int id) throws RemoteException{
