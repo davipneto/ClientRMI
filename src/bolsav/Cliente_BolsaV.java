@@ -10,6 +10,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,8 +27,8 @@ public class Cliente_BolsaV {
         InterfaceServ servidor = null;
         try {
             // TODO code application logic here
-            
-            CliImpl cliente = new CliImpl(2);
+            Random randomGenerator = new Random();
+            CliImpl cliente = new CliImpl(System.nanoTime());
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     new Client_BolsaV(cliente).setVisible(true);

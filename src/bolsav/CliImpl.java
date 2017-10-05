@@ -22,7 +22,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
 
     public List<Stock> stocks;
     public InterfaceServ server;
-    public int id;
+    public long id;
     
     /**
      * @param eee
@@ -38,7 +38,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
         JOptionPane.showMessageDialog(null, event);
     }
     
-    public CliImpl(int id) throws RemoteException{
+    public CliImpl(long id) throws RemoteException{
         stocks = new ArrayList();
         try {
             this.id = id;
@@ -65,7 +65,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
         return stocks;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
     

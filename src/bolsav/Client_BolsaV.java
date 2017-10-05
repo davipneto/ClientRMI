@@ -346,7 +346,12 @@ public class Client_BolsaV extends javax.swing.JFrame {
     private void jBMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBMonitorActionPerformed
         int linha = jTable1.getSelectedRow();
         if (linha != -1) {
-            //implementar monitoramento
+            try {
+                //implementar monitoramento
+                client.server.subscribe(client, jTable1.getValueAt(linha, 0).toString());
+            } catch (RemoteException ex) {
+                Logger.getLogger(Client_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Nenhuma ação selecionada");
         }
