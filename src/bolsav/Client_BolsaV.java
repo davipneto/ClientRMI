@@ -26,6 +26,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
         initComponents();
         jPMonitor.setVisible(true);
         this.client = client;
+        setUpTableMonitor();
     }
 
     /**
@@ -44,6 +45,9 @@ public class Client_BolsaV extends javax.swing.JFrame {
         jBRefresh = new javax.swing.JButton();
         jBBuy = new javax.swing.JButton();
         jBMonitor = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jBFilter = new javax.swing.JButton();
         jPWallet = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
@@ -108,6 +112,18 @@ public class Client_BolsaV extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Empresa: ");
+
+        jTextField1.setText(" ");
+
+        jBFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/magnifier.png"))); // NOI18N
+        jBFilter.setText("Filtrar");
+        jBFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBFilterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPMonitorLayout = new javax.swing.GroupLayout(jPMonitor);
         jPMonitor.setLayout(jPMonitorLayout);
         jPMonitorLayout.setHorizontalGroup(
@@ -116,9 +132,14 @@ public class Client_BolsaV extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPMonitorLayout.createSequentialGroup()
-                        .addGap(0, 417, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jBFilter)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jBRefresh))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jPMonitorLayout.createSequentialGroup()
                 .addGap(49, 49, 49)
@@ -130,15 +151,23 @@ public class Client_BolsaV extends javax.swing.JFrame {
         jPMonitorLayout.setVerticalGroup(
             jPMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPMonitorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jBRefresh)
+                .addGroup(jPMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPMonitorLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jBRefresh))
+                    .addGroup(jPMonitorLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addGroup(jPMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jBFilter))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBBuy)
                     .addComponent(jBMonitor))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Monitor", jPMonitor);
@@ -317,7 +346,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
         if (linha != -1) {
             String company = jTable2.getValueAt(linha, 0).toString();
             int qntd = Integer.parseInt(jTable2.getValueAt(linha, 1).toString());
-            Double price = Double.parseDouble(jTable2.getValueAt(linha, 2).toString().replace(".", ","));
+            Double price = Double.parseDouble(jTable2.getValueAt(linha, 2).toString());
             //buscar a stock ja criada para atualizar a disponibilidade
             Stock stock = new Stock(company, qntd, price);
             stock.setAvailable(true);
@@ -357,6 +386,15 @@ public class Client_BolsaV extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jBMonitorActionPerformed
 
+    private void jBFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFilterActionPerformed
+        if(!jTextField1.getText().isEmpty()){
+            String company = jTextField1.getText();
+            setUpTableMonitorSearch(company);
+        }else{
+            JOptionPane.showMessageDialog(null, "Nenhum dado para pesquisa");
+        }
+    }//GEN-LAST:event_jBFilterActionPerformed
+
     void setUpTableMonitor() {
         try {
             DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
@@ -390,6 +428,30 @@ public class Client_BolsaV extends javax.swing.JFrame {
         }
         jTable2.setModel(tableModel);
         tableModel.fireTableDataChanged();
+    }
+    
+    void setUpTableMonitorSearch(String company) {
+        try {
+            DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+            //atualizar a tabela a partir dos dados em produtos
+            tableModel.setRowCount(0);
+            int qntd;
+            for (StockCli s : client.server.getStocks()) {
+                if(s.id != client.id){
+                if (!s.getStock().isAvailable()) {
+                    qntd = 0;
+                } else {
+                    qntd = s.getStock().getQt();
+                }
+                tableModel.addRow(new Object[]{s.getStock().getCompany(), s.getStock().getPrice(), qntd});
+            }
+            }
+            
+            jTable1.setModel(tableModel);
+            tableModel.fireTableDataChanged();
+        } catch (RemoteException ex) {
+            Logger.getLogger(Client_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -429,11 +491,13 @@ public class Client_BolsaV extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBBuy;
+    private javax.swing.JButton jBFilter;
     private javax.swing.JButton jBMonitor;
     private javax.swing.JButton jBRefresh;
     private javax.swing.JButton jBRegister;
     private javax.swing.JButton jBSell;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -444,6 +508,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;

@@ -35,7 +35,20 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
     
     @Override
     public void notify(String event) throws RemoteException {
-        JOptionPane.showMessageDialog(null, event);
+        String n[] = event.split(" ");
+        String message=null;
+        switch(n[0]){
+            case "rise":
+                message = "O preço da ação " + n[1] + " subiu de " + n[2] + " para " + n[3];
+                break;
+            case "drop":
+                message = "O preço da ação " + n[1] + " caiu de " + n[2] + " para " + n[3];
+                break;
+            default:
+                message = "Algo deu errado";
+                break;
+        }
+        JOptionPane.showMessageDialog(null, message, "Notificação", JOptionPane.WARNING_MESSAGE);
     }
     
     public CliImpl(long id) throws RemoteException{
@@ -56,7 +69,8 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
         try {
             for (Stock st: stocks) {
                 if (st.company.equals(stock.company)) {
-                    st = stock;
+                    st.setAvailable(true);
+                    server.newStock(this, stock, id);
                     return;
                 }
             }
