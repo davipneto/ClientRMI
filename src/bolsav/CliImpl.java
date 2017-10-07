@@ -54,6 +54,12 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
     
     public void insertStock(Stock stock) {
         try {
+            for (Stock st: stocks) {
+                if (st.company.equals(stock.company)) {
+                    st = stock;
+                    return;
+                }
+            }
             stocks.add(stock);
             server.newStock(this, stock, id);
         } catch (RemoteException ex) {
