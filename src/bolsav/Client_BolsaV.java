@@ -27,6 +27,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
         jPMonitor.setVisible(true);
         this.client = client;
         setUpTableMonitor();
+        this.client.frame_client = this;
     }
 
     /**
@@ -60,6 +61,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jBSell = new javax.swing.JButton();
+        jBRefresh2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -176,7 +178,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
 
         jLabel8.setText("Quantidade:");
 
-        jLabel9.setText("Preço Máximo:");
+        jLabel9.setText("Preço Mínimo:");
 
         jBRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/buy.png"))); // NOI18N
         jBRegister.setText("Cadastrar");
@@ -225,6 +227,13 @@ public class Client_BolsaV extends javax.swing.JFrame {
             }
         });
 
+        jBRefresh2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
+        jBRefresh2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBRefresh2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPWalletLayout = new javax.swing.GroupLayout(jPWallet);
         jPWallet.setLayout(jPWalletLayout);
         jPWalletLayout.setHorizontalGroup(
@@ -234,17 +243,12 @@ public class Client_BolsaV extends javax.swing.JFrame {
                 .addGroup(jPWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPWalletLayout.createSequentialGroup()
                         .addGroup(jPWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPWalletLayout.createSequentialGroup()
-                                    .addComponent(jLabel7)
-                                    .addGap(22, 22, 22))
-                                .addGroup(jPWalletLayout.createSequentialGroup()
-                                    .addGap(14, 14, 14)
-                                    .addComponent(jLabel8)
-                                    .addGap(24, 24, 24)))
                             .addGroup(jPWalletLayout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(28, 28, 28)))
+                                .addGap(14, 14, 14)
+                                .addComponent(jLabel9))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jTextField8)
@@ -252,9 +256,14 @@ public class Client_BolsaV extends javax.swing.JFrame {
                             .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jBRegister))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPWalletLayout.createSequentialGroup()
+                                .addComponent(jCheckBox1)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPWalletLayout.createSequentialGroup()
+                                .addComponent(jBRegister)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jBRefresh2)
+                                .addGap(28, 28, 28))))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jPWalletLayout.createSequentialGroup()
@@ -280,7 +289,9 @@ public class Client_BolsaV extends javax.swing.JFrame {
                         .addGroup(jPWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
                             .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jBRegister))
+                    .addGroup(jPWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jBRegister)
+                        .addComponent(jBRefresh2)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -317,24 +328,30 @@ public class Client_BolsaV extends javax.swing.JFrame {
 
     private void jBBuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBuyActionPerformed
         int linha = jTable1.getSelectedRow();
+        double price = 0;
+        int qntd = 0;
         if (linha != -1) {
-            if(jTable1.getValueAt(linha, 2).toString().compareTo("0")!=0){
-            //código para mostrar um panel na caixa de diálogo
-            JTextField priceField = new JTextField(5);
-            JTextField qntdField = new JTextField(5);
-            Object[] message = {"Informe preço máximo e quantidade desejada\n\nPreço:", priceField,"Quantidade:", qntdField};
-            
-            int result = JOptionPane.showConfirmDialog(null, message, "Compra", JOptionPane.OK_CANCEL_OPTION);
-            if (result == JOptionPane.OK_OPTION) {
-                double price = Double.parseDouble(priceField.getText().replace(".", ","));
-                int qntd = Integer.parseInt(qntdField.getText());
-            }
-            String company = jTable1.getValueAt(linha, 0).toString();
-            //registrar compra
-            }else{
+            if (jTable1.getValueAt(linha, 2).toString().compareTo("0") != 0) {
+                //código para mostrar um panel na caixa de diálogo
+                JTextField priceField = new JTextField(5);
+                JTextField qntdField = new JTextField(5);
+                Object[] message = {"Informe preço máximo e quantidade desejada\n\nPreço:", priceField, "Quantidade:", qntdField};
+
+                int result = JOptionPane.showConfirmDialog(null, message, "Compra", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                    price = Double.parseDouble(priceField.getText().replace(".", ","));
+                    qntd = Integer.parseInt(qntdField.getText());
+                }
+                String company = jTable1.getValueAt(linha, 0).toString();
+                try {
+                    client.server.buy(client, company, price, qntd);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(Client_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
                 int op = JOptionPane.showConfirmDialog(null, "", "Login", JOptionPane.OK_CANCEL_OPTION);
             }
-            
+
         } else {
             JOptionPane.showMessageDialog(null, "Nenhuma ação selecionada");
         }
@@ -370,6 +387,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
         jTextField7.setText("");
         jTextField8.setText("");
         jTextField9.setText("");
+        jCheckBox1.setSelected(false);
     }//GEN-LAST:event_jBRegisterActionPerformed
 
     private void jBMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBMonitorActionPerformed
@@ -387,13 +405,18 @@ public class Client_BolsaV extends javax.swing.JFrame {
     }//GEN-LAST:event_jBMonitorActionPerformed
 
     private void jBFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFilterActionPerformed
-        if(!jTextField1.getText().isEmpty()){
+        if (!jTextField1.getText().isEmpty()) {
             String company = jTextField1.getText();
             setUpTableMonitorSearch(company);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Nenhum dado para pesquisa");
         }
     }//GEN-LAST:event_jBFilterActionPerformed
+
+    private void jBRefresh2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRefresh2ActionPerformed
+        // TODO add your handling code here:
+        setUpTableWallet();
+    }//GEN-LAST:event_jBRefresh2ActionPerformed
 
     void setUpTableMonitor() {
         try {
@@ -402,16 +425,16 @@ public class Client_BolsaV extends javax.swing.JFrame {
             tableModel.setRowCount(0);
             int qntd;
             for (StockCli s : client.server.getStocks()) {
-                if(s.id != client.id){
-                if (!s.getStock().isAvailable()) {
-                    qntd = 0;
-                } else {
-                    qntd = s.getStock().getQt();
+                if (s.id != client.id) {
+                    if (!s.getStock().isAvailable()) {
+                        qntd = 0;
+                    } else {
+                        qntd = s.getStock().getQt();
+                    }
+                    tableModel.addRow(new Object[]{s.getStock().getCompany(), s.getStock().getPrice(), qntd});
                 }
-                tableModel.addRow(new Object[]{s.getStock().getCompany(), s.getStock().getPrice(), qntd});
             }
-            }
-            
+
             jTable1.setModel(tableModel);
             tableModel.fireTableDataChanged();
         } catch (RemoteException ex) {
@@ -429,24 +452,30 @@ public class Client_BolsaV extends javax.swing.JFrame {
         jTable2.setModel(tableModel);
         tableModel.fireTableDataChanged();
     }
-    
+
     void setUpTableMonitorSearch(String company) {
         try {
+            company = company.trim();
             DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
             //atualizar a tabela a partir dos dados em produtos
             tableModel.setRowCount(0);
             int qntd;
+            System.out.println("company" + company);
             for (StockCli s : client.server.getStocks()) {
-                if(s.id != client.id){
-                if (!s.getStock().isAvailable()) {
-                    qntd = 0;
-                } else {
-                    qntd = s.getStock().getQt();
+                
+                if (s.getStock().getCompany().contains(company)) {
+                System.out.println("s.company" + s.getStock().getCompany());
+                if (s.id != client.id) {
+                        if (!s.getStock().isAvailable()) {
+                            qntd = 0;
+                        } else {
+                            qntd = s.getStock().getQt();
+                        }
+                        tableModel.addRow(new Object[]{s.getStock().getCompany(), s.getStock().getPrice(), qntd});
+                    }
                 }
-                tableModel.addRow(new Object[]{s.getStock().getCompany(), s.getStock().getPrice(), qntd});
             }
-            }
-            
+
             jTable1.setModel(tableModel);
             tableModel.fireTableDataChanged();
         } catch (RemoteException ex) {
@@ -494,6 +523,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
     private javax.swing.JButton jBFilter;
     private javax.swing.JButton jBMonitor;
     private javax.swing.JButton jBRefresh;
+    private javax.swing.JButton jBRefresh2;
     private javax.swing.JButton jBRegister;
     private javax.swing.JButton jBSell;
     private javax.swing.JCheckBox jCheckBox1;

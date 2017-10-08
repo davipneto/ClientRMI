@@ -23,7 +23,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
     public List<Stock> stocks;
     public InterfaceServ server;
     public long id;
-    
+    public Client_BolsaV frame_client;
     /**
      * @param eee
      * @throws RemoteException
@@ -44,11 +44,25 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
             case "drop":
                 message = "O preço da ação " + n[1] + " caiu de " + n[2] + " para " + n[3];
                 break;
+            case "buy":
+                message = "Foi comprada "+ n[3] + " ação da " + n[1] + " pelo preço " + n[2];
+                Stock stockB = new Stock(n[1], Integer.parseInt(n[3]),Double.parseDouble(n[4]));
+                updateStock(stockB);
+                frame_client.setUpTableWallet();
+                frame_client.setUpTableMonitor();
+                break;
+            case "sell":
+                message = "Foi vendida "+ n[3] + " ação da " + n[1] + " pelo preço " + n[2];
+                Stock stockS = new Stock(n[1], -Integer.parseInt(n[3]),Double.parseDouble(n[4]));
+                updateStock(stockS);
+                frame_client.setUpTableWallet();
+                frame_client.setUpTableMonitor();
+                break;    
             default:
                 message = "Algo deu errado";
                 break;
         }
-        JOptionPane.showMessageDialog(null, message, "Notificação", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, "Notificação "+id, JOptionPane.WARNING_MESSAGE);
     }
     
     public CliImpl(long id) throws RemoteException{
@@ -71,6 +85,23 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli{
                 if (st.company.equals(stock.company)) {
                     st.setAvailable(true);
                     server.newStock(this, stock, id);
+                    return;
+                }
+            }
+            stocks.add(stock);
+            server.newStock(this, stock, id);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    //atualiza a quantidade comprada ou vendida 
+    public void updateStock(Stock stock) {
+        try {
+            for (Stock st: stocks) {
+                if (st.company.equals(stock.company)) {
+                    st.setQt(stock.getQt()+st.getQt());
+                    server.newStock(this, st, id);
                     return;
                 }
             }
