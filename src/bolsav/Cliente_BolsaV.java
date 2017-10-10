@@ -1,35 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bolsav;
 
-import java.rmi.AccessException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author davi
- * @author geova
+ * Classe principal que cria um cliente e executa a interface gráfica
+ *
+ * @author Davi Pereira Neto
+ * @author Geovana Franco Santos
  */
 public class Cliente_BolsaV {
 
     /**
+     * Método principal
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        InterfaceServ servidor = null;
         try {
-            // TODO code application logic here
-            Random randomGenerator = new Random();
+            //cria um novo cliente com um id baseado no tempo de sistema, garantindo que os clientes possuem ids diferentes
             CliImpl cliente = new CliImpl(System.nanoTime());
+            //invoca a interface gráfica
             java.awt.EventQueue.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     new Client_BolsaV(cliente).setVisible(true);
                 }
