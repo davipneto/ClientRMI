@@ -57,6 +57,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jBSell = new javax.swing.JButton();
         jBRefresh2 = new javax.swing.JButton();
+        jBLogout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -86,7 +87,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jBRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
+        jBRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh-button.png"))); // NOI18N
         jBRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBRefreshActionPerformed(evt);
@@ -164,7 +165,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
                 .addGroup(jPMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBBuy)
                     .addComponent(jBMonitor))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Monitor", jPMonitor);
@@ -296,6 +297,14 @@ public class Client_BolsaV extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Minha Carteira", jPWallet);
 
+        jBLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logout.png"))); // NOI18N
+        jBLogout.setText("Sair");
+        jBLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBLogoutActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -304,12 +313,18 @@ public class Client_BolsaV extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jBLogout)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jBLogout)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -457,6 +472,21 @@ public class Client_BolsaV extends javax.swing.JFrame {
     }//GEN-LAST:event_jBRefresh2ActionPerformed
 
     /**
+     * Botão que realiza o logout do cliente e apaga da base de dados do
+     * servidor as ações que relacionam a ele
+     *
+     * @param evt
+     */
+    private void jBLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLogoutActionPerformed
+        try {
+            client.server.logout(client);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Client_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.exit(0);
+    }//GEN-LAST:event_jBLogoutActionPerformed
+
+    /**
      * Método que pega os dados da lista de ações presentes no servidor e
      * atualiza a tabela de monitoramento
      */
@@ -541,6 +571,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBBuy;
     private javax.swing.JButton jBFilter;
+    private javax.swing.JButton jBLogout;
     private javax.swing.JButton jBMonitor;
     private javax.swing.JButton jBRefresh;
     private javax.swing.JButton jBRefresh2;
