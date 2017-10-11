@@ -64,7 +64,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
                 //n[1] possui a empresa, n[3] a quantidade e n[4] o preço mínimo
                 Stock stockB = new Stock(n[1], Integer.parseInt(n[3]), Double.parseDouble(n[4]));
                 //delay para evitar conflitos de acessos
-                {
+                 {
                     try {
                         TimeUnit.SECONDS.sleep(2);
                     } catch (InterruptedException ex) {
@@ -76,7 +76,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
                 updateStock(stockB);
                 //atualiza as tabelas de monitoramento e de minha carteira
                 frame_client.setUpTableWallet();
-                frame_client.setUpTableMonitor();
+                //frame_client.setUpTableMonitor();
                 break;
             case "sell":
                 //seja sell, a mensagem a ser exibida é formatada
@@ -85,7 +85,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
                 //n[1] possui a empresa, n[3] a quantidade (nesse caso negativa porque houve uma venda) e n[4] o preço mínimo
                 Stock stockS = new Stock(n[1], -Integer.parseInt(n[3]), Double.parseDouble(n[4]));
                 //delay para evitar conflitos de acessos
-                {
+                 {
                     try {
                         TimeUnit.SECONDS.sleep(2);
                     } catch (InterruptedException ex) {
@@ -97,7 +97,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
                 updateStock(stockS);
                 //atualiza as tabelas de monitoramento e de minha carteira
                 frame_client.setUpTableWallet();
-                frame_client.setUpTableMonitor();
+                //frame_client.setUpTableMonitor();
                 break;
             default:
                 //caso recebe algo que não esteja documentado

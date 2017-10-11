@@ -25,7 +25,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
         jPMonitor.setVisible(true);
         this.client = client;
         //atualiza a tabela de monitoramento
-        setUpTableMonitor();
+        //setUpTableMonitor();
         this.client.frame_client = this;
         this.setTitle("Cliente " + client.id);
     }
@@ -161,10 +161,10 @@ public class Client_BolsaV extends javax.swing.JFrame {
                             .addComponent(jBFilter))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBBuy)
-                    .addComponent(jBMonitor))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jBMonitor)
+                    .addComponent(jBBuy))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -324,20 +324,28 @@ public class Client_BolsaV extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jBLogout)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     /**
-     * Botão para atualizar os dados da tabela de monitoramento
+     * Botão para atualizar os dados da tabela de monitoramento, é necessário
+     * adicionar uma empresa para se filtrar as ações
      *
      * @param evt
      */
     private void jBRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRefreshActionPerformed
         //atualizar dados da tabela
-        setUpTableMonitor();
+        //setUpTableMonitor();
+        if (!jTextField1.getText().isEmpty()) {
+            String company = jTextField1.getText();
+            //metodo que filtra os dados da tabela
+            setUpTableMonitorSearch(company);
+        } else {
+            JOptionPane.showMessageDialog(null, "Nenhum dado para pesquisa");
+        }
     }//GEN-LAST:event_jBRefreshActionPerformed
 
     /**
@@ -346,37 +354,31 @@ public class Client_BolsaV extends javax.swing.JFrame {
      * @param evt
      */
     private void jBBuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBuyActionPerformed
-        int linha = jTable1.getSelectedRow();
         double price = 0;
         int qntd = 0;
-        if (linha != -1) {
-            //se a ação está disponível para venda
-            if (jTable1.getValueAt(linha, 2).toString().compareTo("0") != 0) {
-                //código para mostrar um panel na caixa de diálogo
-                JTextField priceField = new JTextField(5);
-                JTextField qntdField = new JTextField(5);
-                Object[] message = {"Informe preço máximo e quantidade desejada\n\nPreço:", priceField, "Quantidade:", qntdField};
+        String company = null;
 
-                int result = JOptionPane.showConfirmDialog(null, message, "Compra", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.OK_OPTION && !priceField.getText().isEmpty() && !qntdField.getText().isEmpty()) {
-                    price = Double.parseDouble(priceField.getText().replace(".", ","));
-                    qntd = Integer.parseInt(qntdField.getText());
+        //código para mostrar um panel na caixa de diálogo
+        JTextField priceField = new JTextField(5);
+        JTextField qntdField = new JTextField(5);
+        JTextField companyField = new JTextField(5);
+        Object[] message = {"Informe empresa, preço máximo e quantidade desejada\n\nEmpresa:", companyField, "Preço:", priceField, "Quantidade:", qntdField};
 
-                    String company = jTable1.getValueAt(linha, 0).toString();
-                    try {
-                        //chama o método do servidor para realizar a compra
-                        client.server.buy(client, company, price, qntd);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(Client_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Tente novamente e preencha todos os campos");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Ação selecionada não disponível para venda");
+        int result = JOptionPane.showConfirmDialog(null, message, "Compra", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION && !priceField.getText().isEmpty() && !qntdField.getText().isEmpty() && !companyField.getText().isEmpty()) {
+            price = Double.parseDouble(priceField.getText().replace(".", ","));
+            qntd = Integer.parseInt(qntdField.getText());
+            company = companyField.getText();
+
+            //String company = jTable1.getValueAt(linha, 0).toString();
+            try {
+                //chama o método do servidor para realizar a compra
+                client.server.buy(client, company, price, qntd);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Client_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Nenhuma ação selecionada");
+            JOptionPane.showMessageDialog(null, "Tente novamente e preencha todos os campos");
         }
 
     }//GEN-LAST:event_jBBuyActionPerformed
