@@ -5,6 +5,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -62,7 +63,14 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
                 //cria uma nova ação com os valores recebidos de compra
                 //n[1] possui a empresa, n[3] a quantidade e n[4] o preço mínimo
                 Stock stockB = new Stock(n[1], Integer.parseInt(n[3]), Double.parseDouble(n[4]));
-                //chama o método para atualizar a ação comprada
+                 {
+                    try {
+                        //chama o método para atualizar a ação comprada
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 updateStock(stockB);
                 //atualiza as tabelas de monitoramento e de minha carteira
                 frame_client.setUpTableWallet();
@@ -74,6 +82,14 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
                 //cria uma nova ação com os valores recebidos de venda
                 //n[1] possui a empresa, n[3] a quantidade (nesse caso negativa porque houve uma venda) e n[4] o preço mínimo
                 Stock stockS = new Stock(n[1], -Integer.parseInt(n[3]), Double.parseDouble(n[4]));
+                 {
+                    try {
+                        //chama o método para atualizar a ação comprada
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 //chama o método para atualizar a ação vendida
                 updateStock(stockS);
                 //atualiza as tabelas de monitoramento e de minha carteira
