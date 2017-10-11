@@ -63,14 +63,16 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
                 //cria uma nova ação com os valores recebidos de compra
                 //n[1] possui a empresa, n[3] a quantidade e n[4] o preço mínimo
                 Stock stockB = new Stock(n[1], Integer.parseInt(n[3]), Double.parseDouble(n[4]));
-                 {
+                //delay para evitar conflitos de acessos
+                {
                     try {
-                        //chama o método para atualizar a ação comprada
-                        TimeUnit.SECONDS.sleep(1);
+                        TimeUnit.SECONDS.sleep(2);
                     } catch (InterruptedException ex) {
+                        System.out.println("ex em delay 1");
                         Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                //chama o método para atualizar a ação comprada
                 updateStock(stockB);
                 //atualiza as tabelas de monitoramento e de minha carteira
                 frame_client.setUpTableWallet();
@@ -82,11 +84,12 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
                 //cria uma nova ação com os valores recebidos de venda
                 //n[1] possui a empresa, n[3] a quantidade (nesse caso negativa porque houve uma venda) e n[4] o preço mínimo
                 Stock stockS = new Stock(n[1], -Integer.parseInt(n[3]), Double.parseDouble(n[4]));
-                 {
+                //delay para evitar conflitos de acessos
+                {
                     try {
-                        //chama o método para atualizar a ação comprada
-                        TimeUnit.SECONDS.sleep(1);
+                        TimeUnit.SECONDS.sleep(2);
                     } catch (InterruptedException ex) {
+                        System.out.println("ex em delay 2");
                         Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -154,6 +157,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
             //envia a nova ação para o servidor
             server.newStock(this, stock, id);
         } catch (RemoteException ex) {
+            System.out.println("ex remote em insert");
             Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -169,6 +173,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
         try {
             //testa para todas as ações se já existe uma ação daquela empresa
             for (Stock st : stocks) {
+
                 //caso o cliente já possui ações da empresa
                 if (st.company.equals(stock.company)) {
                     //atualiza a quantidade das ações
@@ -183,6 +188,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
             //envia a nova ação para o servidor
             server.newStock(this, stock, id);
         } catch (RemoteException ex) {
+            System.out.println("ex remote em update");
             Logger.getLogger(CliImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

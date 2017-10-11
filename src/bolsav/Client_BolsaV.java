@@ -27,6 +27,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
         //atualiza a tabela de monitoramento
         setUpTableMonitor();
         this.client.frame_client = this;
+        this.setTitle("Cliente " + client.id);
     }
 
     @SuppressWarnings("unchecked")
@@ -342,7 +343,7 @@ public class Client_BolsaV extends javax.swing.JFrame {
                 Object[] message = {"Informe preço máximo e quantidade desejada\n\nPreço:", priceField, "Quantidade:", qntdField};
 
                 int result = JOptionPane.showConfirmDialog(null, message, "Compra", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
+                if (result == JOptionPane.OK_OPTION && !priceField.getText().isEmpty() && !qntdField.getText().isEmpty()) {
                     price = Double.parseDouble(priceField.getText().replace(".", ","));
                     qntd = Integer.parseInt(qntdField.getText());
 
@@ -353,6 +354,8 @@ public class Client_BolsaV extends javax.swing.JFrame {
                     } catch (RemoteException ex) {
                         Logger.getLogger(Client_BolsaV.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Tente novamente e preencha todos os campos");
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Ação selecionada não disponível para venda");
@@ -492,7 +495,9 @@ public class Client_BolsaV extends javax.swing.JFrame {
         //atualizar a tabela a partir dos dados no cliente
         tableModel.setRowCount(0);
         for (Stock s : client.getStocks()) {
-            tableModel.addRow(new Object[]{s.getCompany(), s.getQt(), s.getPrice(), s.isAvailable()});
+            if (s.getQt() != 0) {
+                tableModel.addRow(new Object[]{s.getCompany(), s.getQt(), s.getPrice(), s.isAvailable()});
+            }
         }
         jTable2.setModel(tableModel);
         tableModel.fireTableDataChanged();
