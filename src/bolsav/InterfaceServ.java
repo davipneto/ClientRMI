@@ -50,7 +50,7 @@ public interface InterfaceServ extends Remote {
     public void subscribe(InterfaceCli client, String company) throws RemoteException;
 
     /**
-     * Realiza a compra de ações
+     * Realiza a compra de uma ação
      *
      * @param buyer com a referência do comprador
      * @param company com o nome da empresa que deseja comprar as ações

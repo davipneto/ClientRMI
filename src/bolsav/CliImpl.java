@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 
 /**
  * A classe CliImpl implementa os métodos remotos da interface InterfaceCli e
- * implementa os métodos locais trabalha com as ações do cliente.
+ * implementa os métodos locais que trabalha com as ações do cliente.
  *
  * @author davi
  * @author geova
